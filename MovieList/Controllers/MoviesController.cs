@@ -24,6 +24,19 @@ namespace MovieList.Controllers
             return View(await _context.Movie.ToListAsync());
         }
 
+        public async Task<IActionResult> Filter(string title, int? genre)
+        {
+            var model = string.IsNullOrWhiteSpace(title) ?
+                await _context.Movie.ToListAsync() :
+                await _context.Movie.Where(m => m.Title == title).ToListAsync();
+
+            model = genre == null ?
+                model :
+                model.Where(m => m.Genre == (Genre)genre).ToList();
+
+            return View(nameof(Index), model);
+        }
+
         // GET: Movies/Details/5
         public async Task<IActionResult> Details(int? id)
         {
