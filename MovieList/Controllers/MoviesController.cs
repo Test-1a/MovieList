@@ -22,6 +22,33 @@ namespace MovieList.Controllers
         public async Task<IActionResult> Index()
         {
             return View(await _context.Movie.ToListAsync());
+        } 
+        
+        public async Task<IActionResult> Index2()
+        {
+           var movies =  await _context.Movie.ToListAsync();
+
+            var model = new MovieViewModel()
+            {
+                Movies = movies,
+                Genres = await GetGenresAsync()
+            };
+
+            return View(model);
+        }
+
+        private async Task<IEnumerable<SelectListItem>> GetGenresAsync()
+        {
+            return await _context.Movie
+                .Select(g => g.Genre)
+                .Distinct()
+                .Select(m => new SelectListItem
+                {
+                    Text = m.ToString(),
+                    Value = m.ToString()
+
+                })
+                .ToListAsync();
         }
 
         public async Task<IActionResult> Filter(string title, int? genre)
