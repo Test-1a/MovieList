@@ -64,6 +64,26 @@ namespace MovieList.Controllers
             return View(nameof(Index), model);
         }
 
+
+        public async Task<IActionResult> Filter2(MovieViewModel viewModel)
+        {
+            var movies = string.IsNullOrWhiteSpace(viewModel.Title) ?
+                await _context.Movie.ToListAsync() :
+                await _context.Movie.Where(m => m.Title == viewModel.Title).ToListAsync();
+
+            movies = viewModel.Genre == null ?
+               movies :
+               movies.Where(m => m.Genre == viewModel.Genre).ToList();
+
+            var model = new MovieViewModel()
+            {
+                Movies = movies,
+                Genres = await GetGenresAsync()
+            };
+
+            return View(nameof(Index2), model);
+        }
+
         // GET: Movies/Details/5
         public async Task<IActionResult> Details(int? id)
         {

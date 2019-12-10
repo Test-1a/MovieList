@@ -14,6 +14,5 @@ namespace MovieList.Models
         public Genre? Genre { get; set; }
         public string Title { get; set; }
 
-
     }
 }
